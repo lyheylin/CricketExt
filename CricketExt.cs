@@ -1,56 +1,71 @@
 ﻿using System.CommandLine;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using CricketExt.Analyzer;
 using OpenCvSharp;
 
 namespace CricketExt {
     public class CricketExt {
+        static Video? video;
         static async Task<int> Main(String[] args) {
-            // Command line
-            RootCommand rootCommand = ParseCL(args);
+            //Command line
+            RootCommand rootCommand = ParseCL();
             await rootCommand.InvokeAsync(args);
+
+            if (video == null) return 0;
+            //Init
+
+            VideoCapture v = video!.Get();
+            ScoreAnalyzer analyzer = new();
+
+
+            //int frameCount = v.FrameCount;
+            //Debug.WriteLine($"Frame Count: {frameCount}");
+            
+            while (v.IsOpened()) {
+                Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
+
+                bool next = v.Read(frame);
+                if (next) 
+                    analyzer.Scan(frame);
+                else
+                    Debug.WriteLine("End of video");                
+
+                int key = Cv2.WaitKey(0);
+                if ((key & 0xFF) == Convert.ToUInt32('q'))
+                    break;
+            }
+
+
+            //Clean up
+            video.Release();
+            Cv2.DestroyAllWindows();//clean this
 
             return 0; 
         }
 
-        static RootCommand ParseCL(String[] args) {
-            var file = new Option<FileInfo?>(
+        static RootCommand ParseCL() {
+            var fileOption = new Option<FileInfo?>(
                name: "--file",
                description: "Video file to analyze.");
+            var threadsOption = new Option<int>(
+                name: "--threads",
+                description: "Number of threads to use.",
+                getDefaultValue: () => 1
+                );
             var rootCommand = new RootCommand("Capture screenshots from a video and read the data on the scoreboard shown in the video.");
 
-            rootCommand.AddOption(file);
+            rootCommand.AddOption(fileOption);
+            rootCommand.AddOption(threadsOption);
             //Bind handlers
-            rootCommand.SetHandler(f => { ReadFile(f!); }, file);
+            rootCommand.SetHandler(f => { ReadFile(f!); }, fileOption);
 
             return rootCommand; 
         }
 
         static void ReadFile(FileInfo file) {
             Debug.WriteLine($"Reading File: {file.Name}");
-            String filePath = file.FullName;
-            VideoCapture video = new VideoCapture(filePath);
-            
-            if (!video.IsOpened()) 
-                Debug.WriteLine($"err: Can not open: {filePath}");
-
-            while (video.IsOpened()) {
-                Mat frame;
-                frame = new Mat(video.FrameHeight, video.FrameWidth, MatType.CV_8UC3);
-                bool next = video.Read(frame);
-                if (next)
-                    Cv2.ImShow("Display", frame);
-                else
-                    Debug.WriteLine("End of video");
-
-
-                int key = Cv2.WaitKey(0);
-                if ((key & 0xFF) == Convert.ToUInt32('q'))
-                    break;
-                
-            }
-
-            video.Release();
-            Cv2.DestroyAllWindows();//debug;move
+            video = new Video(file);
         }
     }
 }   
