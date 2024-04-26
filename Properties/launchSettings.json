@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CricketExt": {
+      "commandName": "Project",
+      "commandLineArgs": "--file AUS-ENG.mp4"
+    }
+  }
+}
