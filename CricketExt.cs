@@ -1,20 +1,23 @@
 ﻿using System.CommandLine;
 using System.Diagnostics;
+using OpenCvSharp;
 
 namespace CricketExt {
     public class CricketExt {
         static async Task<int> Main(String[] args) {
             Debug.WriteLine($"Start program");
+
+            // Command line parsing
             var file = new Option<FileInfo?>(
                 name: "--file",
                 description: "Video file to analyze.");
-
             var rootCommand = new RootCommand("Capture screenshots from a video and read the data on the scoreboard shown in the video.");
 
             rootCommand.AddOption(file);
             rootCommand.SetHandler(f => { ReadFile(f!); }, file);
 
             await rootCommand.InvokeAsync(args);
+
             return 0; 
         }
 
