@@ -7,6 +7,7 @@ using OpenCvSharp;
 namespace CricketExt {
     public class CricketExt {
         static Video? video;
+        const int JUMP_FRAMES = 10;
         static async Task<int> Main(String[] args) {
             //Command line
             RootCommand rootCommand = ParseCL();
@@ -16,15 +17,16 @@ namespace CricketExt {
             //Init
 
             VideoCapture v = video!.Get();
-            ScoreAnalyzer analyzer = new();
+            IAnalyzer analyzer = new ScoreAnalyzer();
 
 
             //int frameCount = v.FrameCount;
             //Debug.WriteLine($"Frame Count: {frameCount}");
             
             while (v.IsOpened()) {
-                Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
+                using Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
 
+                v.PosFrames = v.PosFrames + JUMP_FRAMES;
                 bool next = v.Read(frame);
                 if (next) 
                     analyzer.Scan(frame);
