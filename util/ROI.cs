@@ -9,6 +9,12 @@ namespace CricketExt.util {
     //ROI constants
     internal static class ROI {
         //Top left x, y, width, height of ROIs.
+        //"Overs" text used as scoreboard checker
+        public const int CHECK_1_X = 960;
+        public const int CHECK_1_Y = 990;
+        public const int CHECK_1_W = 60;
+        public const int CHECK_1_H = 30;
+
         //Batter 1 name
         public const int BAT_1_X = 205;
         public const int BAT_1_Y = 945;
@@ -42,7 +48,7 @@ namespace CricketExt.util {
         //Overs
         public const int OVER_X = 920;
         public const int OVER_Y = 990;
-        public const int OVER_W = 32;
+        public const int OVER_W = 36;
         public const int OVER_H = 24;
 
         //Runs
