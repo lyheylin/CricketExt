@@ -7,7 +7,7 @@ using OpenCvSharp;
 namespace CricketExt {
     public class CricketExt {
         static Video? video;
-        const int JUMP_FRAMES = 10;
+        const int JUMP_FRAMES = 60;
         static async Task<int> Main(String[] args) {
             //Command line
             RootCommand rootCommand = ParseCL();
@@ -33,9 +33,9 @@ namespace CricketExt {
                 else
                     Debug.WriteLine("End of video");                
 
-                int key = Cv2.WaitKey(0);
-                if ((key & 0xFF) == Convert.ToUInt32('q'))
-                    break;
+                //int key = Cv2.WaitKey(0);
+                //if ((key & 0xFF) == Convert.ToUInt32('q'))
+                  //  break;
             }
 
 
