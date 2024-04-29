@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using OpenCvSharp;
 using Tesseract;
-using OpenCvSharp.Text;
-using System.Runtime.InteropServices;
 using CricketExt.util;
 
 namespace CricketExt.Analyzer
 {
     internal class ScoreAnalyzer : IAnalyzer
     {
+        //Initialize Tesseract engine
         const String TESS_FOLDER = @"./tessdata";
         const String TESS_LANGUAGE_ENG = "eng";
         static readonly TesseractEngine engine = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
@@ -22,36 +16,34 @@ namespace CricketExt.Analyzer
         //Takes a single frame and scan for scoreboard
         public void Scan(Mat frame)
         {
-            //Initialize Tesseract engine
-            OpenCvSharp.Rect check1 = new OpenCvSharp.Rect(util.ROI.CHECK_1_X, util.ROI.CHECK_1_Y, util.ROI.CHECK_1_W, util.ROI.CHECK_1_H);
-            Page page = ReadTextFromROI(frame, util.ROI.CHECK_1_X, util.ROI.CHECK_1_Y, util.ROI.CHECK_1_W, util.ROI.CHECK_1_H);  
+            Page page = ReadTextFromROI(frame, ROI.CHECK_1_X, ROI.CHECK_1_Y, ROI.CHECK_1_W, ROI.CHECK_1_H);  
             
             if (page.GetText().Equals("OVERS\n")) {
                 page.Dispose();
                 Debug.WriteLine("Checker 1 found.");
                 Cv2.ImShow("Display", frame);
                 
-                page = ReadTextFromROI(frame, util.ROI.OVER_X, util.ROI.OVER_Y, util.ROI.OVER_W, util.ROI.OVER_H);
+                page = ReadTextFromROI(frame, ROI.OVER_X, ROI.OVER_Y, ROI.OVER_W, ROI.OVER_H);
                 Debug.Write($"Over: {page.GetText()}");
                 page.Dispose();
 
-                page = ReadTextFromROI(frame, util.ROI.TEAM_X, util.ROI.TEAM_Y, util.ROI.TEAM_W, util.ROI.TEAM_H, true);
+                page = ReadTextFromROI(frame, ROI.TEAM_X, ROI.TEAM_Y, ROI.TEAM_W, ROI.TEAM_H, true);
                 Debug.Write($"team: {page.GetText()}");
                 page.Dispose();
 
-                page = ReadTextFromROI(frame, util.ROI.BAT_1_X, util.ROI.BAT_1_Y, util.ROI.BAT_1_W, util.ROI.BAT_1_H, true);
+                page = ReadTextFromROI(frame, ROI.BAT_1_X, ROI.BAT_1_Y, ROI.BAT_1_W, ROI.BAT_1_H, true);
                 Debug.Write($"Batter1: {page.GetText()}");
                 page.Dispose();
 
-                page = ReadTextFromROI(frame, util.ROI.BAT_2_X, util.ROI.BAT_2_Y, util.ROI.BAT_2_W, util.ROI.BAT_2_H, true);
+                page = ReadTextFromROI(frame, ROI.BAT_2_X, ROI.BAT_2_Y, ROI.BAT_2_W, ROI.BAT_2_H, true);
                 Debug.Write($"Batter2: {page.GetText()}");
                 page.Dispose();
 
-                page = ReadTextFromROI(frame, util.ROI.BOW_X, util.ROI.BOW_Y, util.ROI.BOW_W, util.ROI.BOW_H, true);
+                page = ReadTextFromROI(frame, ROI.BOW_X, ROI.BOW_Y, ROI.BOW_W, ROI.BOW_H, true);
                 Debug.Write($"Bowler: {page.GetText()}");
                 page.Dispose();
 
-                page = ReadTextFromROI(frame, util.ROI.SCORE_X, util.ROI.SCORE_Y, util.ROI.SCORE_W, util.ROI.SCORE_H);
+                page = ReadTextFromROI(frame, ROI.SCORE_X, ROI.SCORE_Y, ROI.SCORE_W, ROI.SCORE_H);
                 Debug.Write($"Score: {page.GetText()}");
                 page.Dispose();
             }
