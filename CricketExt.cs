@@ -33,9 +33,9 @@ namespace CricketExt {
                 else
                     Debug.WriteLine("End of video");                
 
-                //int key = Cv2.WaitKey(0);
-                //if ((key & 0xFF) == Convert.ToUInt32('q'))
-                  //  break;
+                int key = Cv2.WaitKey(0);
+                if ((key & 0xFF) == Convert.ToUInt32('q'))
+                    break;
             }
 
 

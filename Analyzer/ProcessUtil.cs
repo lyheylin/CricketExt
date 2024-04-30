@@ -13,6 +13,12 @@ namespace CricketExt.Analyzer {
         const String TESS_FOLDER = @"./tessdata";
         const String TESS_LANGUAGE_ENG = "eng";
         public static readonly TesseractEngine engine = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
+        public static readonly TesseractEngine engineDigits = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
+
+        public ProcessUtil() {
+            //engine.SetVariable(" load_system_dawg", false);
+        }
+        
         public static Pix Mat2Pix(Mat src) {
             return Pix.LoadFromMemory(src.ToBytes(".png", (int[]?)null));
         }
@@ -26,13 +32,22 @@ namespace CricketExt.Analyzer {
         }
 
         //Read single line text from ROI of image src.
-        public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false) {
+        public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false, bool digits = false) {
             OpenCvSharp.Rect roi = new(x, y, w, h);
-            Mat croppedMat = new(src, roi);
+            Mat croppedMat = src.Clone(roi);//Use Clone() to leave src untouched.
+
+            //preprocess image before Tesseract
             if (preprocess)
                 croppedMat = MatPreprocess(croppedMat);
-            Page page = engine.Process(Mat2Pix(croppedMat), PageSegMode.SingleLine);
-            return page;
+            Page page;
+            if (digits)
+                engineDigits.SetVariable("tessedit_char_whitelist", "1234567890./");
+            else
+                engineDigits.SetVariable("tessedit_char_whitelist", "");
+
+            page = engine.Process(Mat2Pix(croppedMat), PageSegMode.SingleLine);
+            
+            return page!;
         }
     }
 

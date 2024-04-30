@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CricketExt.util {
     //ROI constants
-    internal static class ROI {
+    internal static class ROIConsts {
         //Top left x, y, width, height of ROIs.
         //"Overs" text used as scoreboard checker
         public const int CHECK_1_X = 960;
@@ -45,11 +45,23 @@ namespace CricketExt.util {
         public const int SCORE_W = 65;
         public const int SCORE_H = 28;
 
-        //Overs
+        //Out
+        public const int OUT_X = 920;
+        public const int OUT_Y = 990;
+        public const int OUT_W = 16;
+        public const int OUT_H = 30;
+
+        //Balls
+        public const int BALL_X = 940;
+        public const int BALL_Y = 990;
+        public const int BALL_W = 16;
+        public const int BALL_H = 30;
+
+        //Out.Balls
         public const int OVER_X = 920;
         public const int OVER_Y = 990;
-        public const int OVER_W = 36;
-        public const int OVER_H = 24;
+        public const int OVER_W = 46;
+        public const int OVER_H = 30;
 
         //Runs
         public const int RUN_1_X = 1410;
