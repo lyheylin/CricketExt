@@ -5,6 +5,7 @@ using Tesseract;
 using static CricketExt.Analyzer.ProcessUtil;
 
 namespace CricketExt.Analyzer {
+    //Takes a frame with a scoreboard identified, extract information from the scoreboard and send result to the gatherer.
     internal class ScoreParser {
 
         private readonly Mat scoreBoard;

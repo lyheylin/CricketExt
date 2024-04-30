@@ -10,7 +10,7 @@ namespace CricketExt.Analyzer {
        
         ScoreGatherer scoreGatherer = new();
         HashSet<String> parsed = new();
-        //Takes a single frame and scan for scoreboard
+        //Takes a single frame and scan for scoreboard, if a scoreboard is identified, send the frame to ScoreParser.
         public void Scan(Mat frame) {
             Page page = ReadTextFromROI(frame, ROIConsts.CHECK_1_X, ROIConsts.CHECK_1_Y, ROIConsts.CHECK_1_W, ROIConsts.CHECK_1_H);
             
@@ -33,23 +33,23 @@ namespace CricketExt.Analyzer {
                 }
                 **/
 
-                String outS = "", ballS = "", teamS = "";
+                String outStr = "", ballStr = "", teamStr = "";
                 page = ReadTextFromROI(frame, ROIConsts.OUT_X, ROIConsts.OUT_Y, ROIConsts.OUT_W, ROIConsts.OUT_H, true, true);
-                outS = page.GetText();
+                outStr = page.GetText();
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.BALL_X, ROIConsts.BALL_Y, ROIConsts.BALL_W, ROIConsts.BALL_H, true, true);
-                ballS = page.GetText();
+                ballStr = page.GetText();
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.TEAM_X, ROIConsts.TEAM_Y, ROIConsts.TEAM_W, ROIConsts.TEAM_H, true);
-                teamS = page.GetText();
+                teamStr = page.GetText();
                 page.Dispose();
 
                 int outInt, ballInt;
 
 
-                if (Int32.TryParse(outS, out outInt) && Int32.TryParse(ballS, out ballInt)) {
-                    if (parsed.Add($"{teamS}/{outS}.{ballS}")) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
-                        ScoreParser parser = new(scoreGatherer, scoreboard, teamS, outInt, ballInt);
+                if (Int32.TryParse(outStr, out outInt) && Int32.TryParse(ballStr, out ballInt)) {
+                    if (parsed.Add($"{teamStr}/{outStr}.{ballStr}")) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
+                        ScoreParser parser = new(scoreGatherer, scoreboard, teamStr, outInt, ballInt);
                         parser.Parse();
                     }
                 }
