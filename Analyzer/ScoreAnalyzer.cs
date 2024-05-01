@@ -21,7 +21,7 @@ namespace CricketExt.Analyzer {
                 //Debug.WriteLine("Checker 1 found.");
                 
                 page = ReadTextFromROI(frame, ROIConsts.OUT_X, ROIConsts.OUT_Y, ROIConsts.OUT_W, ROIConsts.OUT_H, true, true);
-                String outsStr = page.GetText();
+                String oversStr = page.GetText();
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.BALL_X, ROIConsts.BALL_Y, ROIConsts.BALL_W, ROIConsts.BALL_H, true, true);
                 String ballsStr = page.GetText();
@@ -30,15 +30,20 @@ namespace CricketExt.Analyzer {
                 String teamStr = page.GetText();
                 page.Dispose();
 
-                if (Int32.TryParse(outsStr, out int outInt) && Int32.TryParse(ballsStr, out int ballInt)) {
-                    if (parsed.Add(GenTurnString(ballsStr, outInt, ballInt))) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
-                        ScoreParser parser = new(scoreGatherer, scoreboard, teamStr, outInt, ballInt);
+                if (Int32.TryParse(oversStr, out int oversInt) && Int32.TryParse(ballsStr, out int ballInt)) {
+                    if (parsed.Add(GenTurnString(teamStr, oversInt, ballInt))) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
+                        ScoreParser parser = new(scoreGatherer, scoreboard, teamStr, oversInt, ballInt);
                         parser.Parse();
                     }
                 }
                 page.Dispose();
             }
             page.Dispose();
+            frame.Dispose();
+        }
+
+        public void GetResult() {
+            scoreGatherer.postProcess();
         }
     }
 }

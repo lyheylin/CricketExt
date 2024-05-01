@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace CricketExt.DataTypes {
     internal struct Ball {
-        public Ball(int overs, int balls, String battingTeam, String bowler, String batter1, String batter2, int totalRuns, int totalWickets) {
+        public Ball(int overs, int balls, String battingTeam, String bowler, String batter1, String batter2, int totalRuns, int totalWickets, String bowlingTeam = "", int runs = 0, int wickets = 0) {
             Overs = overs;
             Balls = balls;
             Bowler = bowler;
+            BowlingTeam = bowlingTeam;
             BattingTeam = battingTeam;
             Batter1 = batter1;
             Batter2 = batter2;
+            Runs = runs;
+            Wickets = wickets;
             TotalRuns = totalRuns;
             TotalWickets = totalWickets;
         }

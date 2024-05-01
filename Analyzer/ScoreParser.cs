@@ -9,13 +9,13 @@ namespace CricketExt.Analyzer {
     internal class ScoreParser {
 
         private readonly Mat scoreBoard;
-        private readonly int outs, runs;
+        private readonly int overs, runs;
         private ScoreGatherer scoreGatherer;
         private String team;
         Page? page;
-        public ScoreParser(ScoreGatherer scoreGatherer, Mat scoreBoard, String team, int outs, int runs) {
+        public ScoreParser(ScoreGatherer scoreGatherer, Mat scoreBoard, String team, int overs, int runs) {
             this.scoreBoard = scoreBoard;
-            this.outs = outs;
+            this.overs = overs;
             this.runs = runs;
             this.scoreGatherer = scoreGatherer;
             this.team = team;
@@ -24,7 +24,7 @@ namespace CricketExt.Analyzer {
         public async Task<int> Parse() {
             //Debug.WriteLine($"Over: Out {outs}, Run {runs}");
             String batter1, batter2, bowler, score;
-            float meanConfidence = 0f;
+            float meanConfidence = 0.0f;
             page = ReadTextFromROI(scoreBoard, ROIConsts.BAT_1_X, ROIConsts.BAT_1_Y, ROIConsts.BAT_1_W, ROIConsts.BAT_1_H, true);
             meanConfidence += page.GetMeanConfidence();
             batter1 = page.GetText();
@@ -46,10 +46,11 @@ namespace CricketExt.Analyzer {
             page.Dispose();
 
             //Discard result
+            meanConfidence = meanConfidence / 4.0f;
             if (meanConfidence < 0.8)//doesn't need this if the checker is better.
                 return -1;
-
-            return scoreGatherer.Gather(outs, runs, team, batter1, batter2, bowler, score).Result; 
+            var task = await Task.Run(() =>  scoreGatherer.Gather(overs, runs, team, batter1, batter2, bowler, score));
+            return task; 
         } 
         
     }

@@ -40,6 +40,7 @@ namespace CricketExt {
                     break;
             }
 
+            analyzer.GetResult();
 
             //Clean up
             video.Release();

@@ -21,12 +21,12 @@ namespace CricketExt.Analyzer {
             //engine.SetVariable(" load_system_dawg", false);
         }
         
-        public static Pix Mat2Pix(Mat src) {
+        private static Pix Mat2Pix(Mat src) {
             return Pix.LoadFromMemory(src.ToBytes(".png", (int[]?)null));
         }
 
         //Preprocess image by greyscale then coverged to b/w inverted image.
-        public static Mat MatPreprocess(Mat mat) {
+        private static Mat MatPreprocess(Mat mat) {
             Mat processed = new();
             Cv2.CvtColor(mat, processed, ColorConversionCodes.RGB2GRAY);
             Cv2.Threshold(processed, processed, 110, 255, ThresholdTypes.BinaryInv);
@@ -56,8 +56,8 @@ namespace CricketExt.Analyzer {
             return engine.Process(Mat2Pix(croppedMat), PageSegMode.SingleLine);
         }
 
-        public static String GenTurnString(String team, int outs, int balls) {
-            return $"{team}/{outs}.{balls}";
+        public static String GenTurnString(String team, int overs, int balls) {
+            return $"{team}/{overs}.{balls}";
         }
     }
 
