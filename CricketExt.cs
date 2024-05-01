@@ -1,8 +1,10 @@
-﻿using System.CommandLine;
+﻿using System.Collections.Concurrent;
+using System.CommandLine;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using CricketExt.Analyzer;
 using OpenCvSharp;
+using CricketExt.DataTypes;
 
 namespace CricketExt {
     public class CricketExt {
@@ -22,16 +24,16 @@ namespace CricketExt {
 
             //int frameCount = v.FrameCount;
             //Debug.WriteLine($"Frame Count: {frameCount}");
-            
+
             while (v.IsOpened()) {
                 using Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
 
                 v.PosFrames = v.PosFrames + JUMP_FRAMES;
                 bool next = v.Read(frame);
-                if (next) 
+                if (next)
                     analyzer.Scan(frame);
                 else
-                    Debug.WriteLine("End of video");                
+                    Debug.WriteLine("End of video");
 
                 int key = Cv2.WaitKey(0);
                 if ((key & 0xFF) == Convert.ToUInt32('q'))
@@ -43,7 +45,7 @@ namespace CricketExt {
             video.Release();
             Cv2.DestroyAllWindows();//clean this
 
-            return 0; 
+            return 0;
         }
 
         static RootCommand ParseCL() {
@@ -62,7 +64,7 @@ namespace CricketExt {
             //Bind handlers
             rootCommand.SetHandler(f => { ReadFile(f!); }, fileOption);
 
-            return rootCommand; 
+            return rootCommand;
         }
 
         static void ReadFile(FileInfo file) {

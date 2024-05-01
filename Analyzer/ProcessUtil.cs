@@ -49,6 +49,10 @@ namespace CricketExt.Analyzer {
             
             return page!;
         }
+
+        public static String GenTurnString(String team, int outs, int balls) {
+            return $"{team}/{outs}.{balls}";
+        }
     }
 
 }

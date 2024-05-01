@@ -42,13 +42,11 @@ namespace CricketExt.Analyzer {
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.TEAM_X, ROIConsts.TEAM_Y, ROIConsts.TEAM_W, ROIConsts.TEAM_H, true);
                 teamStr = page.GetText();
+                Debug.WriteLine($"team: {teamStr}");
                 page.Dispose();
 
-                int outInt, ballInt;
-
-
-                if (Int32.TryParse(outStr, out outInt) && Int32.TryParse(ballStr, out ballInt)) {
-                    if (parsed.Add($"{teamStr}/{outStr}.{ballStr}")) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
+                if (Int32.TryParse(outStr, out int outInt) && Int32.TryParse(ballStr, out int ballInt)) {
+                    if (parsed.Add(GenTurnString(ballStr, outInt, ballInt))) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
                         ScoreParser parser = new(scoreGatherer, scoreboard, teamStr, outInt, ballInt);
                         parser.Parse();
                     }
