@@ -19,34 +19,19 @@ namespace CricketExt.Analyzer {
 
                 page.Dispose();
                 //Debug.WriteLine("Checker 1 found.");
-
-                /**
-                page = ReadTextFromROI(frame, ROI.OVER_X, ROI.OVER_Y, ROI.OVER_W, ROI.OVER_H, true, true);
-                Debug.Write($"Over: {page.GetText()}");
-                Regex regex = new(@"([0-9]+).([0-9]+)\n");
-                Match match = regex.Match(page.GetText());
-                if (!match.Success) {
-                    Debug.WriteLine($"Confidence: {page.GetMeanConfidence()}");
-                    OpenCvSharp.Rect roi = new(ROI.OVER_X, ROI.OVER_Y, ROI.OVER_W, ROI.OVER_H);
-                    Mat croppedMat = new(frame, roi);
-                    Cv2.ImShow("Display", croppedMat);
-                }
-                **/
-
-                String outStr = "", ballStr = "", teamStr = "";
+                
                 page = ReadTextFromROI(frame, ROIConsts.OUT_X, ROIConsts.OUT_Y, ROIConsts.OUT_W, ROIConsts.OUT_H, true, true);
-                outStr = page.GetText();
+                String outsStr = page.GetText();
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.BALL_X, ROIConsts.BALL_Y, ROIConsts.BALL_W, ROIConsts.BALL_H, true, true);
-                ballStr = page.GetText();
+                String ballsStr = page.GetText();
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.TEAM_X, ROIConsts.TEAM_Y, ROIConsts.TEAM_W, ROIConsts.TEAM_H, true);
-                teamStr = page.GetText();
-                Debug.WriteLine($"team: {teamStr}");
+                String teamStr = page.GetText();
                 page.Dispose();
 
-                if (Int32.TryParse(outStr, out int outInt) && Int32.TryParse(ballStr, out int ballInt)) {
-                    if (parsed.Add(GenTurnString(ballStr, outInt, ballInt))) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
+                if (Int32.TryParse(outsStr, out int outInt) && Int32.TryParse(ballsStr, out int ballInt)) {
+                    if (parsed.Add(GenTurnString(ballsStr, outInt, ballInt))) {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
                         ScoreParser parser = new(scoreGatherer, scoreboard, teamStr, outInt, ballInt);
                         parser.Parse();
                     }

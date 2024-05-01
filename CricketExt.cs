@@ -20,20 +20,20 @@ namespace CricketExt {
 
             VideoCapture v = video!.Get();
             IAnalyzer analyzer = new ScoreAnalyzer();
-
-
             //int frameCount = v.FrameCount;
             //Debug.WriteLine($"Frame Count: {frameCount}");
 
             while (v.IsOpened()) {
                 using Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
 
-                v.PosFrames = v.PosFrames + JUMP_FRAMES;
+                v.PosFrames += JUMP_FRAMES;
                 bool next = v.Read(frame);
                 if (next)
                     analyzer.Scan(frame);
-                else
+                else {
                     Debug.WriteLine("End of video");
+                    break;
+                }
 
                 int key = Cv2.WaitKey(0);
                 if ((key & 0xFF) == Convert.ToUInt32('q'))

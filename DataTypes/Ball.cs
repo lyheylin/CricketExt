@@ -30,7 +30,7 @@ namespace CricketExt.DataTypes {
         public int TotalWickets { get; set; }
 
         public override string ToString() {
-            return ($"{Overs}.{Balls}, {BowlingTeam}, {BattingTeam}, {Batter1}, {Batter2}, {Runs}, {Wickets}, {TotalRuns}, {TotalWickets}");
+            return ($"{Overs}.{Balls}, {BowlingTeam}, {BattingTeam}, {Bowler}, {Batter1}, {Batter2}, {Runs}, {Wickets}, {TotalRuns}, {TotalWickets}");
         }
     }
 }
