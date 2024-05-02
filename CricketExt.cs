@@ -15,13 +15,12 @@ namespace CricketExt {
             RootCommand rootCommand = ParseCL();
             await rootCommand.InvokeAsync(args);
 
-            if (video == null) return 0;
-            //Init
+            if (video == null) return 0; //Add error message
 
+            //Init
             VideoCapture v = video!.Get();
+            if (v == null) return 0; //Add error message
             IAnalyzer analyzer = new ScoreAnalyzer();
-            //int frameCount = v.FrameCount;
-            //Debug.WriteLine($"Frame Count: {frameCount}");
 
             while (v.IsOpened()) {
                 using Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);

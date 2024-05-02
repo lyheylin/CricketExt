@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CricketExt.util {
-    //ROI constants
+    /// <summary>
+    /// Collection of ROI related constants used by the ScoreAnalyzer.
+    /// </summary>
     internal static class ROIConsts {
         //Top left x, y, width, height of ROIs.
         //"Overs" text used as scoreboard checker
@@ -26,6 +28,21 @@ namespace CricketExt.util {
         public const int BAT_2_Y = 945;
         public const int BAT_2_W = 245;
         public const int BAT_2_H = 28;
+
+        //Batter 1 marker
+        public const int BAT_1_MARK_X = 192;
+        public const int BAT_1_MARK_Y = 952;
+        public const int BAT_1_MARK_W = 16;
+        public const int BAT_1_MARK_H = 16;
+
+        //Batter 2 marker 
+        public const int BAT_2_MARK_X = 530;
+        public const int BAT_2_MARK_Y = 952;
+        public const int BAT_2_MARK_W = 16;
+        public const int BAT_2_MARK_H = 16;
+
+        public const int BAT_1_NUM = 206;
+        public const int BAT_2_NUM = 256;
 
         //Bowler name
         public const int BOW_X = 1255;

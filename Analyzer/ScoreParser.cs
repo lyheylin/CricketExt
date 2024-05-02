@@ -24,6 +24,10 @@ namespace CricketExt.Analyzer {
         public async Task<int> Parse() {
             //Debug.WriteLine($"Over: Out {outs}, Run {runs}");
             String batter1, batter2, bowler, score;
+
+            //Detect current batter by looking for > marker.
+            bool bat1 = CountZero(scoreBoard, ROIConsts.BAT_1_MARK_X, ROIConsts.BAT_1_MARK_Y, ROIConsts.BAT_1_MARK_W, ROIConsts.BAT_1_MARK_H) == ROIConsts.BAT_1_NUM;
+
             float meanConfidence = 0.0f;
             page = ReadTextFromROI(scoreBoard, ROIConsts.BAT_1_X, ROIConsts.BAT_1_Y, ROIConsts.BAT_1_W, ROIConsts.BAT_1_H, true);
             meanConfidence += page.GetMeanConfidence();
@@ -34,6 +38,8 @@ namespace CricketExt.Analyzer {
             meanConfidence += page.GetMeanConfidence();
             batter2 = page.GetText();
             page.Dispose();
+
+            if (!bat1) (batter1, batter2) = (batter2, batter1);
 
             page = ReadTextFromROI(scoreBoard, ROIConsts.BOW_X, ROIConsts.BOW_Y, ROIConsts.BOW_W, ROIConsts.BOW_H, true);
             meanConfidence += page.GetMeanConfidence();

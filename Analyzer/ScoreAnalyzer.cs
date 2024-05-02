@@ -10,6 +10,7 @@ namespace CricketExt.Analyzer {
        
         ScoreGatherer scoreGatherer = new();
         HashSet<String> parsed = new();
+        //Dictionary<String, >
         //Takes a single frame and scan for scoreboard, if a scoreboard is identified, send the frame to ScoreParser.
         public void Scan(Mat frame) {
             Page page = ReadTextFromROI(frame, ROIConsts.CHECK_1_X, ROIConsts.CHECK_1_Y, ROIConsts.CHECK_1_W, ROIConsts.CHECK_1_H);
@@ -43,7 +44,7 @@ namespace CricketExt.Analyzer {
         }
 
         public void GetResult() {
-            scoreGatherer.postProcess();
+            scoreGatherer.PostProcess();
         }
     }
 }

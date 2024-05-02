@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace CricketExt.util {
+    /// <summary>
+    /// Collection of String constants.
+    /// </summary>
     internal class StringConsts {
         public const String TEAM = "Team";
         public const String BATTER_1 = "Batter1";

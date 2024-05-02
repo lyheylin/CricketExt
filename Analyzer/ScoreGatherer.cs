@@ -35,7 +35,7 @@ namespace CricketExt.Analyzer {
         }
 
         
-        public void postProcess() {
+        public void PostProcess() {
             List<Ball> balls = scoreDictionary.Values.ToList<Ball>();
             balls.Sort(delegate(Ball x, Ball y) {
                 if (x.BattingTeam.Equals(y.BattingTeam)) {
