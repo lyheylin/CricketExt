@@ -13,7 +13,7 @@ namespace CricketExt.Analyzer {
         const int JUMP_FRAMES = 60;
         //Dictionary<String, >
         //Takes a single frame and scan for scoreboard, if a scoreboard is identified, send the frame to ScoreParser.
-        public async Task<int> ScanAsync(VideoCapture v) {
+        public async Task<int[]> ScanAsync(VideoCapture v) {
 
             List<Task<int>> tasks = new();
             while (v.IsOpened()) {
@@ -57,13 +57,13 @@ namespace CricketExt.Analyzer {
                     break;
                 page.Dispose();
             }
-            await Task.WhenAll(tasks);
+            int[] results = await Task.WhenAll(tasks);
             v.Release();
-            return 0;
+            return results;
         }
 
-        public void GetResult() {
-            scoreGatherer.PostProcess();
+        public String[] GetResult() {
+            return scoreGatherer.PostProcess();
         }
     }
 }

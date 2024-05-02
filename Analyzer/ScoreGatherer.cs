@@ -35,7 +35,7 @@ namespace CricketExt.Analyzer {
         }
 
         
-        public void PostProcess() {
+        public String[] PostProcess() {
             List<Ball> balls = scoreDictionary.Values.ToList<Ball>();
             balls.Sort(delegate(Ball x, Ball y) {
                 if (x.BattingTeam.Equals(y.BattingTeam)) {
@@ -63,9 +63,21 @@ namespace CricketExt.Analyzer {
                     processedList.Add(new Ball(ball.Overs, ball.Balls, ball.BattingTeam, ball.Bowler, ball.Batter1, ball.Batter2, totalRuns, totalWickets, bowlingTeam, runs, wickets));
                 } 
             }
+
+            List<String> result =
+            [
+                $"Team 1,{team1}",
+                $"Team 2,{team2}",
+                String.Empty,
+                "Over,Bowling Team,Batting Team,Bowler Name,Batter 1 Name,Batter 2 Name,Result - Runs,Result - Wickets,Total Runs,Total Wickets"
+            ];
+
             foreach (Ball b in processedList){
+                result.Add(b.ToString());
                 Debug.WriteLine(b);
             }
+
+            return result.ToArray();
         }
 
         //Removes new lines (\n) from strings.

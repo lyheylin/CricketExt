@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CricketExt.Analyzer {
     internal interface IAnalyzer {
-        Task<int> ScanAsync(VideoCapture video);
-        void GetResult();
+        Task<int[]> ScanAsync(VideoCapture video);
+        String[] GetResult();
     }
 }
