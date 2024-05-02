@@ -46,7 +46,7 @@ namespace CricketExt.Analyzer {
             bowler = page.GetText();
             page.Dispose();
 
-            page = ReadTextFromROI(scoreBoard, ROIConsts.SCORE_X, ROIConsts.SCORE_Y, ROIConsts.SCORE_W, ROIConsts.SCORE_H);
+            page = ReadTextFromROI(scoreBoard, ROIConsts.SCORE_X, ROIConsts.SCORE_Y, ROIConsts.SCORE_W, ROIConsts.SCORE_H,false, true);
             meanConfidence += page.GetMeanConfidence();
             score = page.GetText();
             page.Dispose();

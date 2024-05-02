@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CricketExt.Analyzer {
     internal interface IAnalyzer {
-        void Scan(Mat frame);
+        Task<int> ScanAsync(VideoCapture video);
         void GetResult();
     }
 }

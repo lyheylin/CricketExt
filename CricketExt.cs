@@ -9,7 +9,6 @@ using CricketExt.DataTypes;
 namespace CricketExt {
     public class CricketExt {
         static Video? video;
-        const int JUMP_FRAMES = 60;
         static async Task<int> Main(String[] args) {
             //Command line
             RootCommand rootCommand = ParseCL();
@@ -18,33 +17,14 @@ namespace CricketExt {
             if (video == null) return 0; //Add error message
 
             //Init
-            VideoCapture v = video!.Get();
+            VideoCapture v = video.Get();
             if (v == null) return 0; //Add error message
             IAnalyzer analyzer = new ScoreAnalyzer();
 
-            while (v.IsOpened()) {
-                using Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
-
-                v.PosFrames += JUMP_FRAMES;
-                bool next = v.Read(frame);
-                if (next)
-                    analyzer.Scan(frame);
-                else {
-                    Debug.WriteLine("End of video");
-                    break;
-                }
-
-                int key = Cv2.WaitKey(0);
-                if ((key & 0xFF) == Convert.ToUInt32('q'))
-                    break;
-            }
-
+            await analyzer.ScanAsync(v);
             analyzer.GetResult();
 
             //Clean up
-            video.Release();
-            Cv2.DestroyAllWindows();//clean this
-
             return 0;
         }
 
