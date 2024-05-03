@@ -80,7 +80,7 @@ namespace CricketExt.Analyzer {
                     page.Dispose();
                 }
 
-                int key = Cv2.WaitKey(1000);
+                int key = Cv2.WaitKey(0);
                 if ((key & 0xFF) == Convert.ToUInt32('q'))
                     break;
             }

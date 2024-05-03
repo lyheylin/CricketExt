@@ -20,6 +20,7 @@ namespace CricketExt {
             if (video == null) return 0; //Add error message
 
             //Init
+            ProcessUtil.SetVariables();
             VideoCapture v = video.Get();
             if (v == null) return 0; //Add error message
             IAnalyzer analyzer = new ScoreAnalyzer();

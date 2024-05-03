@@ -20,13 +20,19 @@ namespace CricketExt.Analyzer {
         public static readonly TesseractEngine engineTeam = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
 
         public ProcessUtil() {
+            
+        }
+        /// <summary>
+        /// Initialize configurations for the tesseract engine.
+        /// </summary>
+        public static void SetVariables() {
             //Tesseract engine configuration
             engineDigits.SetVariable("tessedit_char_whitelist", @"1234567890./");
-            engineDigits.SetVariable("classify_bln_numeric_mode", 1);
+            //engineDigits.SetVariable("classify_bln_numeric_mode", 1);
             engineDigits.SetVariable("user_patterns_file", SCORE_PATTERN);
             engineTeam.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
             engineTeam.SetVariable("user_patterns_file", TEAM_PATTERN);
-            //engine.SetVariable(" load_system_dawg", false);
+            engine.SetVariable(" load_system_dawg", false);
         }
 
         private static Pix Mat2Pix(Mat src) {
@@ -60,6 +66,7 @@ namespace CricketExt.Analyzer {
         /// <param name="digits">Reads only digits and '.', '/'.</param>
         /// <returns>Returns a Page file containing OCR result of region of interest of src.</returns>
         public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false, bool digits = false, bool team = false) {
+
             OpenCvSharp.Rect roi = new(x, y, w, h);
             Mat croppedMat = src.Clone(roi);//Use Clone() to leave src untouched.
 
