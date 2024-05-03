@@ -6,6 +6,20 @@ using System.Threading.Tasks;
 
 namespace CricketExt.DataTypes
 {
+    /// <summary>
+    /// Representation of a ball.
+    /// </summary>
+    /// <param name="overs"></param>
+    /// <param name="balls"></param>
+    /// <param name="battingTeam"></param>
+    /// <param name="bowler"></param>
+    /// <param name="batter1"></param>
+    /// <param name="batter2"></param>
+    /// <param name="totalRuns"></param>
+    /// <param name="totalWickets"></param>
+    /// <param name="bowlingTeam"></param>
+    /// <param name="runs"></param>
+    /// <param name="wickets"></param>
     internal struct Ball(int overs, int balls, string battingTeam, string bowler, string batter1, string batter2, int totalRuns, int totalWickets, string bowlingTeam = "", int runs = 0, int wickets = 0) {
         public int Overs { get; set; } = overs;
         public int Balls { get; set; } = balls;

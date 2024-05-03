@@ -7,10 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Tesseract;
 
-namespace CricketExt.Analyzer
-{
-    internal class ProcessUtil
-    {
+namespace CricketExt.Analyzer {
+    internal class ProcessUtil {
 
         //Initialize Tesseract engine
         const string TESS_FOLDER = @"./tessdata";
@@ -18,21 +16,18 @@ namespace CricketExt.Analyzer
         public static readonly TesseractEngine engine = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
         public static readonly TesseractEngine engineDigits = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
 
-        public ProcessUtil()
-        {
+        public ProcessUtil() {
             //Tesseract engine configuration
             engineDigits.SetVariable("tessedit_char_whitelist", "1234567890./");
             //engine.SetVariable(" load_system_dawg", false);
         }
 
-        private static Pix Mat2Pix(Mat src)
-        {
+        private static Pix Mat2Pix(Mat src) {
             return Pix.LoadFromMemory(src.ToBytes(".png", (int[]?)null));
         }
 
         //Preprocess image by greyscale then coverged to b/w inverted image.
-        private static Mat MatPreprocess(Mat mat)
-        {
+        private static Mat MatPreprocess(Mat mat) {
             Mat processed = new();
             Cv2.CvtColor(mat, processed, ColorConversionCodes.RGB2GRAY);
             Cv2.Threshold(processed, processed, 110, 255, ThresholdTypes.BinaryInv);
@@ -57,8 +52,7 @@ namespace CricketExt.Analyzer
         /// <param name="preprocess">Preprocess image with greyscaling and inverting to black and white image.</param>
         /// <param name="digits">Reads only digits and '.', '/'.</param>
         /// <returns>Returns a Page file containing OCR result of region of interest of src.</returns>
-        public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false, bool digits = false)
-        {
+        public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false, bool digits = false) {
             OpenCvSharp.Rect roi = new(x, y, w, h);
             Mat croppedMat = src.Clone(roi);//Use Clone() to leave src untouched.
 
@@ -77,8 +71,7 @@ namespace CricketExt.Analyzer
         /// <param name="overs">Number of overs.</param>
         /// <param name="balls">Number of balls.</param>
         /// <returns></returns>
-        public static string GenTurnString(string team, int overs, int balls)
-        {
+        public static string GenTurnString(string team, int overs, int balls) {
             return $"{team}/{overs}.{balls}";
         }
 
@@ -91,8 +84,7 @@ namespace CricketExt.Analyzer
         /// <param name="w">Width of region of interest.</param>
         /// <param name="h">Height of region of interest.</param>
         /// <returns></returns>
-        public static int CountZero(Mat src, int x, int y, int w, int h)
-        {
+        public static int CountZero(Mat src, int x, int y, int w, int h) {
             OpenCvSharp.Rect roi = new(x, y, w, h);
             Mat croppedMat = src.Clone(roi);
             Cv2.CvtColor(croppedMat, croppedMat, ColorConversionCodes.RGB2GRAY);

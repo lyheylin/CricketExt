@@ -10,17 +10,14 @@ using static CricketExt.Analyzer.ProcessUtil;
 using System.Text.RegularExpressions;
 using CricketExt.DataTypes;
 
-namespace CricketExt.Analyzer
-{
+namespace CricketExt.Analyzer {
     //Gathers extracted data from ScoreParser and constructs a scoreDictionary record of scores for each ball.
-    internal class ScoreGatherer
-    {
+    internal class ScoreGatherer {
         private static ConcurrentDictionary<string, Ball> scoreDictionary = new();
         private readonly Regex scoreRegex = new(@"([0-9]+)/([0-9]+)");
         private string team1 = string.Empty, team2 = string.Empty;
         public ScoreGatherer() { }
-        public int Gather(int overs, int balls, string team, string batter1, string batter2, string bowler, string score)
-        {
+        public int Gather(int overs, int balls, string team, string batter1, string batter2, string bowler, string score) {
             string key = GenTurnString(team, overs, balls);
             team = RemoveNewLine(team);
             if (team1.Equals(string.Empty)) team1 = team;
@@ -38,8 +35,7 @@ namespace CricketExt.Analyzer
         }
 
 
-        public string[] PostProcess()
-        {
+        public string[] PostProcess() {
             List<Ball> balls = scoreDictionary.Values.ToList();
             balls.Sort(delegate (Ball x, Ball y)
             {
@@ -55,8 +51,7 @@ namespace CricketExt.Analyzer
             });
 
             List<Ball> processedList = new();
-            for (int i = 0; i < balls.Count; i++)
-            {
+            for (int i = 0; i < balls.Count; i++) {
                 Ball ball = balls[i];
                 string bowlingTeam;
                 if (ball.BattingTeam.Equals(team1)) bowlingTeam = team2;
@@ -82,8 +77,7 @@ namespace CricketExt.Analyzer
                 "Over,Bowling Team,Batting Team,Bowler Name,Batter 1 Name,Batter 2 Name,Result - Runs,Result - Wickets,Total Runs,Total Wickets"
             ];
 
-            foreach (Ball b in processedList)
-            {
+            foreach (Ball b in processedList) {
                 result.Add(b.ToString());
                 //Debug.WriteLine(b);
             }
@@ -92,8 +86,7 @@ namespace CricketExt.Analyzer
         }
 
         //Removes new lines (\n) from strings.
-        private string RemoveNewLine(string str)
-        {
+        private string RemoveNewLine(string str) {
             return str.Replace("\n", string.Empty);
         }
     }

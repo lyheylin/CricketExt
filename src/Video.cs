@@ -6,13 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CricketExt
-{
-    public class Video
-    {
+namespace CricketExt {
+    public class Video {
         readonly VideoCapture video;
-        public Video(FileInfo file)
-        {
+        public Video(FileInfo file) {
             string filePath = file.FullName;
             video = new(filePath);
 

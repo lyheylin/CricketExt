@@ -6,15 +6,12 @@ using CricketExt.Analyzer;
 using OpenCvSharp;
 using CricketExt.DataTypes;
 
-namespace CricketExt
-{
-    public class CricketExt
-    {
+namespace CricketExt {
+    public class CricketExt {
         static Video? video;
         static FileInfo? inputPath;
         static FileInfo? outputPath;
-        static async Task<int> Main(string[] args)
-        {
+        static async Task<int> Main(string[] args) {
             //Command line
             RootCommand rootCommand = ParseCL();
             await rootCommand.InvokeAsync(args);
@@ -34,8 +31,7 @@ namespace CricketExt
             return 0;
         }
 
-        private static RootCommand ParseCL()
-        {
+        private static RootCommand ParseCL() {
             var fileOption = new Option<FileInfo?>(
                name: "--file",
                description: "Video file to analyze."
@@ -62,15 +58,13 @@ namespace CricketExt
             return rootCommand;
         }
 
-        private static void HandleCommandLine(FileInfo input, FileInfo output)
-        {
+        private static void HandleCommandLine(FileInfo input, FileInfo output) {
             Debug.WriteLine($"Reading File: {input.Name}");
             inputPath = input;
             outputPath = output;
         }
 
-        private static void OutputFile(string[] result)
-        {
+        private static void OutputFile(string[] result) {
             string output = @$"./output/{inputPath!.Name.Substring(0, inputPath!.Name.Length - inputPath!.Extension.Length)}.csv";
             if (outputPath != null) output = outputPath.FullName;
             Directory.CreateDirectory(@"./output");

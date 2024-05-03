@@ -4,19 +4,16 @@ using System.Diagnostics;
 using Tesseract;
 using static CricketExt.Analyzer.ProcessUtil;
 
-namespace CricketExt.Analyzer
-{
+namespace CricketExt.Analyzer {
     //Takes a frame with a scoreboard identified, extract information from the scoreboard and send result to the gatherer.
-    internal class ScoreParser
-    {
+    internal class ScoreParser {
 
         private readonly Mat scoreBoard;
         private readonly int overs, runs;
         private ScoreGatherer scoreGatherer;
         private string team;
         Page? page;
-        public ScoreParser(ScoreGatherer scoreGatherer, Mat scoreBoard, string team, int overs, int runs)
-        {
+        public ScoreParser(ScoreGatherer scoreGatherer, Mat scoreBoard, string team, int overs, int runs) {
             this.scoreBoard = scoreBoard;
             this.overs = overs;
             this.runs = runs;
@@ -24,8 +21,7 @@ namespace CricketExt.Analyzer
             this.team = team;
         }
 
-        public async Task<int> Parse()
-        {
+        public async Task<int> Parse() {
             //Debug.WriteLine($"Over: Out {outs}, Run {runs}");
             string batter1, batter2, bowler, score;
 

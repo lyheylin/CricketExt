@@ -10,27 +10,22 @@ using static System.Formats.Asn1.AsnWriter;
 using System;
 using CricketExt.util;
 
-namespace CricketExt.Analyzer
-{
-    internal class ScoreAnalyzer : IAnalyzer
-    {
+namespace CricketExt.Analyzer {
+    internal class ScoreAnalyzer : IAnalyzer {
         ScoreGatherer scoreGatherer = new();
         HashSet<string> parsed = new();
         const int JUMP_FRAMES = 59;
         private ConcurrentStack<(string, int)> latestFrame = new();
         //Takes a single frame and scan for scoreboard, if a scoreboard is identified, send the frame to ScoreParser.
-        public async Task<int[]> ScanAsync(VideoCapture v)
-        {
+        public async Task<int[]> ScanAsync(VideoCapture v) {
 
             List<Task<int>> tasks = new();
-            while (v.IsOpened())
-            {
+            while (v.IsOpened()) {
                 using Mat frame = new(v.FrameHeight, v.FrameWidth, MatType.CV_8UC3);
 
                 v.PosFrames += JUMP_FRAMES;
                 bool next = v.Read(frame);
-                if (!next)
-                {
+                if (!next) {
                     latestFrame.TryPeek(out (string, int) latest);
                     v.PosFrames = latest.Item2;
                     v.Read(frame);
@@ -43,8 +38,7 @@ namespace CricketExt.Analyzer
                     break;
                 }
 
-                if (IsScoreBoard(frame))
-                {
+                if (IsScoreBoard(frame)) {
                     Page page;
                     page = ReadTextFromROI(frame, ROIConsts.OUT_X, ROIConsts.OUT_Y, ROIConsts.OUT_W, ROIConsts.OUT_H, true, true);
                     string oversStr = page.GetText();
@@ -58,18 +52,14 @@ namespace CricketExt.Analyzer
                     page.Dispose();
 
 
-                    if (int.TryParse(oversStr, out int oversInt) && int.TryParse(ballsStr, out int ballInt))
-                    {
+                    if (int.TryParse(oversStr, out int oversInt) && int.TryParse(ballsStr, out int ballInt)) {
                         string roundStr = GenTurnString(teamStr, oversInt, ballInt);
-                        if (!parsed.Add(roundStr))
-                        {//TODO sometimes a 'Ball' can consist of more than one ball throw. <= need change for this case?
+                        if (!parsed.Add(roundStr)) {
                             latestFrame.TryPop(out (string, int) latest);
                             latestFrame.Push((roundStr, v.PosFrames - 1));
                         }
-                        else
-                        {
-                            if (!latestFrame.IsEmpty)
-                            {
+                        else {
+                            if (!latestFrame.IsEmpty) {
                                 int i = v.PosFrames;
                                 latestFrame.TryPeek(out (string, int) latest);
                                 //Debug.WriteLine($"{latest}");
@@ -99,8 +89,7 @@ namespace CricketExt.Analyzer
             return results;
         }
 
-        public string[] GetResult()
-        {
+        public string[] GetResult() {
             return scoreGatherer.PostProcess();
         }
 
@@ -109,8 +98,7 @@ namespace CricketExt.Analyzer
         /// </summary>
         /// <param name="frame">Image to check for scoreboard.</param>
         /// <returns>True if scoreboard is found. Otherwise False.</returns>
-        private bool IsScoreBoard(Mat frame)
-        {
+        private bool IsScoreBoard(Mat frame) {
             Regex reg = new(@"([0-9]+)/([0-9]+)");
             Page page = ReadTextFromROI(frame, ROIConsts.CHECK_1_X, ROIConsts.CHECK_1_Y, ROIConsts.CHECK_1_W, ROIConsts.CHECK_1_H);
             if (page.GetText().Equals("OVERS\n"))
