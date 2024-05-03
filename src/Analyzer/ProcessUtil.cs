@@ -12,13 +12,20 @@ namespace CricketExt.Analyzer {
 
         //Initialize Tesseract engine
         const string TESS_FOLDER = @"./tessdata";
+        const string SCORE_PATTERN = @"./tessdata/scorepattern.patterns";
+        const string TEAM_PATTERN = @"./tessdata/teampattern.patterns";
         const string TESS_LANGUAGE_ENG = "eng";
         public static readonly TesseractEngine engine = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
         public static readonly TesseractEngine engineDigits = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
+        public static readonly TesseractEngine engineTeam = new(TESS_FOLDER, TESS_LANGUAGE_ENG, EngineMode.Default);
 
         public ProcessUtil() {
             //Tesseract engine configuration
-            engineDigits.SetVariable("tessedit_char_whitelist", "1234567890./");
+            engineDigits.SetVariable("tessedit_char_whitelist", @"1234567890./");
+            engineDigits.SetVariable("classify_bln_numeric_mode", 1);
+            engineDigits.SetVariable("user_patterns_file", SCORE_PATTERN);
+            engineTeam.SetVariable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            engineTeam.SetVariable("user_patterns_file", TEAM_PATTERN);
             //engine.SetVariable(" load_system_dawg", false);
         }
 
@@ -30,10 +37,10 @@ namespace CricketExt.Analyzer {
         private static Mat MatPreprocess(Mat mat) {
             Mat processed = new();
             Cv2.CvtColor(mat, processed, ColorConversionCodes.RGB2GRAY);
-            Cv2.Threshold(processed, processed, 110, 255, ThresholdTypes.BinaryInv);
+            Cv2.Threshold(processed, processed, 125, 255, ThresholdTypes.BinaryInv);
             //Cv2.Resize(processed, processed, new Size(processed.Width*2, processed.Height*2));
 
-            //var se = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3));
+            //var se = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(1, 1));
             //Cv2.GaussianBlur(processed, processed, new(5, 5), 0);
             //Cv2.MorphologyEx(processed, processed, MorphTypes.Open, se);
             //Cv2.Erode(processed, processed, se);
@@ -52,15 +59,20 @@ namespace CricketExt.Analyzer {
         /// <param name="preprocess">Preprocess image with greyscaling and inverting to black and white image.</param>
         /// <param name="digits">Reads only digits and '.', '/'.</param>
         /// <returns>Returns a Page file containing OCR result of region of interest of src.</returns>
-        public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false, bool digits = false) {
+        public static Page ReadTextFromROI(Mat src, int x, int y, int w, int h, bool preprocess = false, bool digits = false, bool team = false) {
             OpenCvSharp.Rect roi = new(x, y, w, h);
             Mat croppedMat = src.Clone(roi);//Use Clone() to leave src untouched.
 
             //preprocess image before Tesseract
             if (preprocess)
                 croppedMat = MatPreprocess(croppedMat);
-            if (digits)
-                return engineDigits.Process(Mat2Pix(croppedMat), PageSegMode.SingleLine);
+            if (digits) {
+                //Cv2.ImShow("display", croppedMat);
+                //int key = Cv2.WaitKey(10);
+                return engineDigits.Process(Mat2Pix(croppedMat), PageSegMode.SingleBlock);
+            }
+            if (team)
+                return engineTeam.Process(Mat2Pix(croppedMat), PageSegMode.SingleBlock);
             return engine.Process(Mat2Pix(croppedMat), PageSegMode.SingleLine);
         }
 

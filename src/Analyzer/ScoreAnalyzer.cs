@@ -42,45 +42,45 @@ namespace CricketExt.Analyzer {
                     Page page;
                     page = ReadTextFromROI(frame, ROIConsts.OUT_X, ROIConsts.OUT_Y, ROIConsts.OUT_W, ROIConsts.OUT_H, true, true);
                     string oversStr = page.GetText();
+                    oversStr = oversStr.Replace("\n", string.Empty);
                     page.Dispose();
                     page = ReadTextFromROI(frame, ROIConsts.BALL_X, ROIConsts.BALL_Y, ROIConsts.BALL_W, ROIConsts.BALL_H, true, true);
                     string ballsStr = page.GetText();
+                    ballsStr = ballsStr.Replace("\n", string.Empty);
                     page.Dispose();
                     page = ReadTextFromROI(frame, ROIConsts.TEAM_X, ROIConsts.TEAM_Y, ROIConsts.TEAM_W, ROIConsts.TEAM_H, true);
                     string teamStr = page.GetText();
                     teamStr = teamStr.Replace("\n", string.Empty);
                     page.Dispose();
 
-
                     if (int.TryParse(oversStr, out int oversInt) && int.TryParse(ballsStr, out int ballInt)) {
                         string roundStr = GenTurnString(teamStr, oversInt, ballInt);
-                        if (!parsed.Add(roundStr)) {
-                            latestFrame.TryPop(out (string, int) latest);
-                            latestFrame.Push((roundStr, v.PosFrames - 1));
-                        }
-                        else {
-                            if (!latestFrame.IsEmpty) {
-                                int i = v.PosFrames;
-                                latestFrame.TryPeek(out (string, int) latest);
-                                //Debug.WriteLine($"{latest}");
-                                v.PosFrames = latest.Item2;
-                                v.Read(frame);
-                                Mat scoreboard = frame.Clone();
-                                v.PosFrames = i;
-                                Regex r = new(@"([ABCDEFGHIJKLMNOPQRSTUVWXYZ]+)/([0-9]+).([0-9]+)");
-                                Match m = r.Match(latest.Item1);
-                                Debug.WriteLine($"{roundStr}");
-                                Debug.WriteLine($"{m.Groups[1].Value},{m.Groups[2].Value},{m.Groups[3].Value}, {latest.Item2}");
-                                ScoreParser parser = new(scoreGatherer, scoreboard, m.Groups[1].Value, int.Parse(m.Groups[2].Value), int.Parse(m.Groups[3].Value));
-                                tasks.Add(Task.Run(() => parser.Parse()));
+                        Debug.WriteLine($"{roundStr}");
+                        Regex r = new(@"([ABCDEFGHIJKLMNOPQRSTUVWXYZ]+)/([0-9]+).([0-9]+)");
+                        if (r.Match(roundStr).Success) {
+                            if (!parsed.Add(roundStr)) {
+                                latestFrame.TryPop(out (string, int) latest);
+                                latestFrame.Push((roundStr, v.PosFrames - 1));
+                            } else {
+                                if (!latestFrame.IsEmpty) {
+                                    int i = v.PosFrames;
+                                    latestFrame.TryPeek(out (string, int) latest);
+                                    v.PosFrames = latest.Item2;
+                                    v.Read(frame);
+                                    Mat scoreboard = frame.Clone();
+                                    v.PosFrames = i;
+                                    Match m = r.Match(latest.Item1);
+                                    ScoreParser parser = new(scoreGatherer, scoreboard, m.Groups[1].Value, int.Parse(m.Groups[2].Value), int.Parse(m.Groups[3].Value));
+                                    tasks.Add(Task.Run(() => parser.Parse()));
+                                }
+                                latestFrame.Push((roundStr, v.PosFrames - 1));
                             }
-                            latestFrame.Push((roundStr, v.PosFrames - 1));
                         }
                     }
                     page.Dispose();
                 }
 
-                int key = Cv2.WaitKey(0);
+                int key = Cv2.WaitKey(1000);
                 if ((key & 0xFF) == Convert.ToUInt32('q'))
                     break;
             }
@@ -105,6 +105,7 @@ namespace CricketExt.Analyzer {
             {
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.SCORE_X, ROIConsts.SCORE_Y, ROIConsts.SCORE_W, ROIConsts.SCORE_H, true, true);
+                Debug.WriteLine(@$"{page.GetText().Replace("\n", String.Empty)}");
                 bool sucess = reg.Match(page.GetText()).Success;
                 page.Dispose();
                 return sucess;

@@ -51,16 +51,16 @@ namespace CricketExt.util {
         public const int BOW_H = 28;
 
         //Offense team name
-        public const int TEAM_X = 895;
+        public const int TEAM_X = 884;
         public const int TEAM_Y = 930;
-        public const int TEAM_W = 60;
-        public const int TEAM_H = 33;
+        public const int TEAM_W = 65;
+        public const int TEAM_H = 40;
 
         //Score
-        public const int SCORE_X = 960;
-        public const int SCORE_Y = 930;
-        public const int SCORE_W = 65;
-        public const int SCORE_H = 33;
+        public const int SCORE_X = 955;
+        public const int SCORE_Y = 932;
+        public const int SCORE_W = 75;
+        public const int SCORE_H = 35;
 
         //Out
         public const int OUT_X = 920;
