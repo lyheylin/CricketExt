@@ -5,11 +5,13 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CricketExt.util {
+namespace CricketExt.util
+{
     /// <summary>
     /// Collection of ROI related constants used by the ScoreAnalyzer.
     /// </summary>
-    internal static class ROIConsts {
+    internal static class ROIConsts
+    {
         //Top left x, y, width, height of ROIs.
         //"Overs" text used as scoreboard checker
         public const int CHECK_1_X = 960;
