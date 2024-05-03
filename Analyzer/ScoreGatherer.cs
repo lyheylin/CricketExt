@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 namespace CricketExt.Analyzer {
     //Gathers extracted data from ScoreParser and constructs a scoreDictionary record of scores for each ball.
     internal class ScoreGatherer {
-        static ConcurrentDictionary<String, Ball> scoreDictionary = new();
+        private static ConcurrentDictionary<String, Ball> scoreDictionary = new();
         private readonly Regex scoreRegex = new(@"([0-9]+)/([0-9]+)");
         private String team1 = String.Empty, team2 = String.Empty;
         public ScoreGatherer() { }
@@ -28,7 +28,7 @@ namespace CricketExt.Analyzer {
             Match match = scoreRegex.Match(score);
             int.TryParse(match.Groups[1].Value, out int totalRuns);
             int.TryParse(match.Groups[2].Value, out int totalWickets);
-            scoreDictionary.TryAdd(key, new Ball());//Do we check this or is this unnecessary?
+            //scoreDictionary.TryAdd(key, new Ball());//Do we check this or is this unnecessary?
             scoreDictionary[key] = new Ball(overs, balls, team, bowler, batter1, batter2, totalRuns, totalWickets);
             Debug.WriteLine($"Added {scoreDictionary[key]}");
             return 0;
@@ -64,6 +64,7 @@ namespace CricketExt.Analyzer {
                 } 
             }
 
+            //Add csv file header.
             List<String> result =
             [
                 $"Team 1,{team1}",
@@ -74,7 +75,7 @@ namespace CricketExt.Analyzer {
 
             foreach (Ball b in processedList){
                 result.Add(b.ToString());
-                Debug.WriteLine(b);
+                //Debug.WriteLine(b);
             }
 
             return result.ToArray();

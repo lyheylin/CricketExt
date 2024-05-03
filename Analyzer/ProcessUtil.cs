@@ -31,7 +31,7 @@ namespace CricketExt.Analyzer {
             Mat processed = new();
             Cv2.CvtColor(mat, processed, ColorConversionCodes.RGB2GRAY);
             Cv2.Threshold(processed, processed, 110, 255, ThresholdTypes.BinaryInv);
-            //Cv2.Resize(processed, processed, new Size(processed.Width*3, processed.Height*3));
+            //Cv2.Resize(processed, processed, new Size(processed.Width*2, processed.Height*2));
 
             //var se = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(3, 3));
             //Cv2.GaussianBlur(processed, processed, new(5, 5), 0);

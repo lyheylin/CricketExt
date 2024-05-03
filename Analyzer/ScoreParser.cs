@@ -46,7 +46,7 @@ namespace CricketExt.Analyzer {
             bowler = page.GetText();
             page.Dispose();
 
-            page = ReadTextFromROI(scoreBoard, ROIConsts.SCORE_X, ROIConsts.SCORE_Y, ROIConsts.SCORE_W, ROIConsts.SCORE_H,false, true);
+            page = ReadTextFromROI(scoreBoard, ROIConsts.SCORE_X, ROIConsts.SCORE_Y, ROIConsts.SCORE_W, ROIConsts.SCORE_H,true, true);
             meanConfidence += page.GetMeanConfidence();
             score = page.GetText();
             page.Dispose();
@@ -55,8 +55,8 @@ namespace CricketExt.Analyzer {
             meanConfidence = meanConfidence / 4.0f;
             if (meanConfidence < 0.8)//doesn't need this if the checker is better.
                 return -1;
-            var task = await Task.Run(() =>  scoreGatherer.Gather(overs, runs, team, batter1, batter2, bowler, score));
-            return task; 
+
+            return await Task.Run(() => scoreGatherer.Gather(overs, runs, team, batter1, batter2, bowler, score));
         } 
         
     }
