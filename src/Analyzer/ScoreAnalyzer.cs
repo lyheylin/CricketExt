@@ -89,12 +89,12 @@ namespace CricketExt.Analyzer {
                                 int i = v.PosFrames;
                                 latestFrame.TryPeek(out (string, int) latest);
                                 Match m = r.Match(latest.Item1);
-                                    v.PosFrames = latest.Item2;
-                                    v.Read(frame);
-                                    Mat scoreboard = frame.Clone();
-                                    v.PosFrames = i;
-                                    ScoreParser parser = new(scoreGatherer, scoreboard, m.Groups[1].Value, int.Parse(m.Groups[2].Value), int.Parse(m.Groups[3].Value));
-                                    tasks.Add(Task.Run(() => parser.Parse()));
+                                v.PosFrames = latest.Item2;
+                                v.Read(frame);
+                                Mat scoreboard = frame.Clone();
+                                v.PosFrames = i;
+                                ScoreParser parser = new(scoreGatherer, scoreboard, m.Groups[1].Value, int.Parse(m.Groups[2].Value), int.Parse(m.Groups[3].Value));
+                                tasks.Add(Task.Run(() => parser.Parse()));
                             }
                             team1 = teamStr;
 

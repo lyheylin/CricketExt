@@ -21,12 +21,8 @@ namespace CricketExt.Analyzer {
         public ScoreGatherer() { }
         public int Gather(int overs, int balls, string team, string batter1, string batter2, string bowler, string score) {
             string key = GenTurnString(team, overs, balls, score);
-            team = RemoveNewLine(team);
             if (team1.Equals(string.Empty)) team1 = team;
             else if (team2.Equals(string.Empty) && !team.Equals(team1)) team2 = team;
-            batter1 = RemoveNewLine(batter1);
-            batter2 = RemoveNewLine(batter2);
-            bowler = RemoveNewLine(bowler);
             Match match = scoreRegex.Match(score);
             int.TryParse(match.Groups[1].Value, out int totalRuns);
             int.TryParse(match.Groups[2].Value, out int totalWickets);
@@ -99,11 +95,6 @@ namespace CricketExt.Analyzer {
                 string.Empty,
                 "Over,Bowling Team,Batting Team,Bowler Name,Batter 1 Name,Batter 2 Name,Result - Runs,Result - Wickets,Total Runs,Total Wickets"
             ];
-        }
-
-        //Removes new lines (\n) from strings.
-        private string RemoveNewLine(string str) {
-            return str.Replace("\n", string.Empty);
         }
     }
 }

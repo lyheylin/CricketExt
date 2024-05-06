@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CricketExt.util {
     /// <summary>
-    /// Collection of ROI related constants used by the ScoreAnalyzer.
+    /// Collection of ROI related constants.
     /// </summary>
     internal static class ROIConsts {
         //Top left x, y, width, height of ROIs.
