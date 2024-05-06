@@ -368,3 +368,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Analyzer/ProcessUtilAsync.cs
 /tessdata/phototest.tif
+/Properties/launchSettings.json
