@@ -42,11 +42,6 @@ namespace CricketExt {
                name: "--file",
                description: "Video file to analyze."
                );
-            var threadsOption = new Option<int>(
-                name: "--threads",
-                description: "Number of threads to use.",
-                getDefaultValue: () => 1
-                );
             var outputOption = new Option<FileInfo?>(
                 name: "--output",
                 description: "Optional destination .csv file path."
@@ -61,10 +56,10 @@ namespace CricketExt {
             var rootCommand = new RootCommand("Capture screenshots from a video and read the data on the scoreboard shown in the video.");
 
             rootCommand.AddOption(fileOption);
-            rootCommand.AddOption(threadsOption);
             rootCommand.AddOption(outputOption);
+            rootCommand.AddOption(headerOption);
             //Bind handlers
-            rootCommand.SetHandler((f, o) => { HandleCommandLine(f!, o!); }, fileOption, outputOption);
+            rootCommand.SetHandler((f, o, h) => { HandleCommandLine(f!, o!, h!); }, fileOption, outputOption, headerOption);
 
             return rootCommand;
         }
@@ -74,10 +69,11 @@ namespace CricketExt {
         /// </summary>
         /// <param name="input"></param>
         /// <param name="output"></param>
-        private static void HandleCommandLine(FileInfo input, FileInfo output) {
+        private static void HandleCommandLine(FileInfo input, FileInfo output, bool h) {
             Debug.WriteLine($"Reading File: {input.Name}");
             inputPath = input;
             outputPath = output;
+            header = h;
         }
 
         private static void OutputFile(string[] result) {
