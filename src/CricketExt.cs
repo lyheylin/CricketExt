@@ -11,7 +11,7 @@ namespace CricketExt {
         static Video? video;
         static FileInfo? inputPath;
         static FileInfo? outputPath;
-        static bool header;
+        static bool header = true;
         static async Task<int> Main(string[] args) {
             //Command line
             RootCommand rootCommand = ParseCL();

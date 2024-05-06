@@ -31,7 +31,7 @@ namespace CricketExt.Analyzer {
             int.TryParse(match.Groups[1].Value, out int totalRuns);
             int.TryParse(match.Groups[2].Value, out int totalWickets);
             scoreDictionary[key] = new Ball(overs, balls, team, bowler, batter1, batter2, totalRuns, totalWickets);
-            //Debug.WriteLine($"Added {scoreDictionary[key]}");
+            Debug.WriteLine($"Parsed {team}: {overs}.{balls}");
             return 0;
         }
 

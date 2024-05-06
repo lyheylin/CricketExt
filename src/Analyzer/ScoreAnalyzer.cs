@@ -49,8 +49,8 @@ namespace CricketExt.Analyzer {
                         ScoreParser parser = new(scoreGatherer, scoreboard, m.Groups[1].Value, int.Parse(m.Groups[2].Value), int.Parse(m.Groups[3].Value));
                         tasks.Add(Task.Run(() => parser.Parse()));
                     }
+                    
                     Debug.WriteLine("End of video");
-
                     break;
                 }
 
@@ -153,7 +153,6 @@ namespace CricketExt.Analyzer {
             {
                 page.Dispose();
                 page = ReadTextFromROI(frame, ROIConsts.SCORE_X, ROIConsts.SCORE_Y, ROIConsts.SCORE_W, ROIConsts.SCORE_H, true, true);
-                Debug.WriteLine(@$"{page.GetText().Replace("\n", String.Empty)}");
                 bool sucess = reg.Match(page.GetText()).Success;
                 page.Dispose();
                 return sucess;
