@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using Tesseract;
 
 namespace CricketExt.Analyzer {
+
+    /// <summary>
+    /// Provide utility functions using the configured Tessseract engine.
+    /// </summary>
     internal class ProcessUtil {
 
         //Initialize Tesseract engine
@@ -43,7 +47,7 @@ namespace CricketExt.Analyzer {
         private static Mat MatPreprocess(Mat mat) {
             Mat processed = new();
             Cv2.CvtColor(mat, processed, ColorConversionCodes.RGB2GRAY);
-            Cv2.Threshold(processed, processed, 125, 255, ThresholdTypes.BinaryInv);
+            Cv2.Threshold(processed, processed, 120, 255, ThresholdTypes.BinaryInv);
             //Cv2.Resize(processed, processed, new Size(processed.Width*2, processed.Height*2));
 
             //var se = Cv2.GetStructuringElement(MorphShapes.Rect, new Size(1, 1));
@@ -90,8 +94,8 @@ namespace CricketExt.Analyzer {
         /// <param name="overs">Number of overs.</param>
         /// <param name="balls">Number of balls.</param>
         /// <returns></returns>
-        public static string GenTurnString(string team, int overs, int balls) {
-            return $"{team}/{overs}.{balls}";
+        public static string GenTurnString(string team, int overs, int balls, String score) {
+            return $"{team}/{overs}.{balls}:{score}";
         }
 
         /// <summary>

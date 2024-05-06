@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 namespace CricketExt.Analyzer {
     internal interface IAnalyzer {
         Task<int[]> ScanAsync(VideoCapture video);
-        string[] GetResult();
+        string[] GetResult(bool header);
     }
 }

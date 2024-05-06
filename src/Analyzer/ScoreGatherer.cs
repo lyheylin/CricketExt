@@ -11,14 +11,16 @@ using System.Text.RegularExpressions;
 using CricketExt.DataTypes;
 
 namespace CricketExt.Analyzer {
-    //Gathers extracted data from ScoreParser and constructs a scoreDictionary record of scores for each ball.
+    /// <summary>
+    /// Gathers extracted data from ScoreParser and constructs a scoreDictionary record of scores for each ball.
+    /// </summary>
     internal class ScoreGatherer {
         private static ConcurrentDictionary<string, Ball> scoreDictionary = new();
         private readonly Regex scoreRegex = new(@"([0-9]+)/([0-9]+)");
         private string team1 = string.Empty, team2 = string.Empty;
         public ScoreGatherer() { }
         public int Gather(int overs, int balls, string team, string batter1, string batter2, string bowler, string score) {
-            string key = GenTurnString(team, overs, balls);
+            string key = GenTurnString(team, overs, balls, score);
             team = RemoveNewLine(team);
             if (team1.Equals(string.Empty)) team1 = team;
             else if (team2.Equals(string.Empty) && !team.Equals(team1)) team2 = team;
@@ -28,21 +30,27 @@ namespace CricketExt.Analyzer {
             Match match = scoreRegex.Match(score);
             int.TryParse(match.Groups[1].Value, out int totalRuns);
             int.TryParse(match.Groups[2].Value, out int totalWickets);
-            //scoreDictionary.TryAdd(key, new Ball());//Do we check this or is this unnecessary?
             scoreDictionary[key] = new Ball(overs, balls, team, bowler, batter1, batter2, totalRuns, totalWickets);
-            Debug.WriteLine($"Added {scoreDictionary[key]}");
+            //Debug.WriteLine($"Added {scoreDictionary[key]}");
             return 0;
         }
 
-
-        public string[] PostProcess() {
+        /// <summary>
+        /// /// <summary>
+        /// Populate data and return the proccessed data.
+        /// <param name="header">Option to print header.</param>
+        /// <returns>Header of </returns>
+        public string[] PostProcess(bool header) {
             List<Ball> balls = scoreDictionary.Values.ToList();
             balls.Sort(delegate (Ball x, Ball y)
             {
                 if (x.BattingTeam.Equals(y.BattingTeam))
                 {
-                    if (x.Overs == y.Overs)
-                        return x.Balls.CompareTo(y.Balls);
+                    if (x.Overs == y.Overs) {
+                        if(x.Balls == y.Balls) {
+                            return (x.TotalRuns + x.TotalWickets).CompareTo(y.TotalRuns + y.TotalWickets);
+                        } else return x.Balls.CompareTo(y.Balls);
+                    }
                     else return x.Overs.CompareTo(y.Overs);
                 }
                 else if (x.BattingTeam.Equals(team1)) return -1;
@@ -69,13 +77,7 @@ namespace CricketExt.Analyzer {
             }
 
             //Add csv file header.
-            List<string> result =
-            [
-                $"Team 1,{team1}",
-                $"Team 2,{team2}",
-                string.Empty,
-                "Over,Bowling Team,Batting Team,Bowler Name,Batter 1 Name,Batter 2 Name,Result - Runs,Result - Wickets,Total Runs,Total Wickets"
-            ];
+            List<String> result = header ? GetHeader() : [];
 
             foreach (Ball b in processedList) {
                 result.Add(b.ToString());
@@ -83,6 +85,20 @@ namespace CricketExt.Analyzer {
             }
 
             return result.ToArray();
+        }
+
+        /// <summary>
+        /// Creates header of output file.
+        /// </summary>
+        /// <returns>Header of outputfile.</returns>
+        private List<String> GetHeader() {
+            return 
+            [
+                $"Team 1,{team1}",
+                $"Team 2,{team2}",
+                string.Empty,
+                "Over,Bowling Team,Batting Team,Bowler Name,Batter 1 Name,Batter 2 Name,Result - Runs,Result - Wickets,Total Runs,Total Wickets"
+            ];
         }
 
         //Removes new lines (\n) from strings.

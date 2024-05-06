@@ -79,5 +79,11 @@ namespace CricketExt.util {
         public const int OVER_Y = 990;
         public const int OVER_W = 46;
         public const int OVER_H = 30;
+
+        //Marks for score each ball this over. **Unused
+        public const int MARKS_X = 1254;
+        public const int MARKS_Y = 982;
+        public const int MARKS_W = 360;
+        public const int MARKS_H = 32;
     }
 }

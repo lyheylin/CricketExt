@@ -11,6 +11,7 @@ namespace CricketExt {
         static Video? video;
         static FileInfo? inputPath;
         static FileInfo? outputPath;
+        static bool header;
         static async Task<int> Main(string[] args) {
             //Command line
             RootCommand rootCommand = ParseCL();
@@ -26,12 +27,16 @@ namespace CricketExt {
             IAnalyzer analyzer = new ScoreAnalyzer();
 
             await analyzer.ScanAsync(v);
-            string[] result = analyzer.GetResult();
+            string[] result = analyzer.GetResult(header);
 
             OutputFile(result);
             return 0;
         }
 
+        /// <summary>
+        /// Command line parser.
+        /// </summary>
+        /// <returns></returns>
         private static RootCommand ParseCL() {
             var fileOption = new Option<FileInfo?>(
                name: "--file",
@@ -46,6 +51,11 @@ namespace CricketExt {
                 name: "--output",
                 description: "Optional destination .csv file path."
                 );
+            var headerOption = new Option<bool>(
+                name: "--header",
+                description: "Option to print header for output file.",
+                getDefaultValue: () => true
+                );
 
 
             var rootCommand = new RootCommand("Capture screenshots from a video and read the data on the scoreboard shown in the video.");
@@ -59,6 +69,11 @@ namespace CricketExt {
             return rootCommand;
         }
 
+        /// <summary>
+        /// Commandline handler.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="output"></param>
         private static void HandleCommandLine(FileInfo input, FileInfo output) {
             Debug.WriteLine($"Reading File: {input.Name}");
             inputPath = input;
